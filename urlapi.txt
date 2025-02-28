@@ -1,0 +1,1 @@
+            const url = `https://script.google.com/macros/s/AKfycbxLymYTmLHazuIG-8aqAgxvzAhGf253OMtsZjJim2x5wI29EoI8f8ZGvr5LPDjPGp6J/exec?key=AKfycbxLymYTmLHazuIG-8aqAgxvzAhGf253OMtsZjJim2x5wI29EoI8f8ZGvr5LPDjPGp6J&cpf=${cpf}`;
