@@ -1,1 +1,187 @@
 Projeto para validar membro ativo no PSACarsClub
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Membro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        input {
+            padding: 10px;
+            width: 93%;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Fundo transparente */
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            height: 50%;
+            margin: auto;
+            align-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .green-modal {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .red-modal {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Verifique se é membro PSACARSCLUB</h2>
+        <input type="text" id="cpf" placeholder="Digite seu CPF ou RG" maxlength="14" />
+        <button onclick="verificarCPF()">Verificar</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <span class="close" id="closeModal">&times;</span>
+            <p id="modalMessage"></p>
+            <p id="apiMessage"></p>
+        </div>
+    </div>
+    <script>
+        function verificarCPF() {
+            const cpf = document.getElementById('cpf').value;
+
+            // Verifica se o CPF está vazio
+            if (!cpf) {
+                alert('Por favor, digite um CPF!');
+                return;
+            }
+
+            // Envia o CPF para a API
+            const url = `https://script.google.com/macros/s/AKfycbxLymYTmLHazuIG-8aqAgxvzAhGf253OMtsZjJim2x5wI29EoI8f8ZGvr5LPDjPGp6J/exec?key=AKfycbxLymYTmLHazuIG-8aqAgxvzAhGf253OMtsZjJim2x5wI29EoI8f8ZGvr5LPDjPGp6J&cpf=${cpf}`;
+
+            fetch(url)
+                .then(response => response.json())  // Converte a resposta para JSON
+                .then(data => {
+                    const modal = document.getElementById("myModal");
+                    const modalContent = document.getElementById("modalContent");
+                    const modalMessage = document.getElementById("modalMessage");
+                    const apiMessage = document.getElementById("apiMessage");
+
+                    console.log(data); // Exibe a resposta no console
+
+                    // Limpar qualquer conteúdo anterior no modal
+                    modalMessage.textContent = ""; // Limpa o texto do modal
+
+                    // Verifica o valor de 'validar' e exibe a resposta
+                    if (data.validar === true) {
+                        modalMessage.textContent = 'MEMBRO'; // Atualiza o texto
+                        modalContent.className = 'modal-content green-modal'; // Fundo verde
+                        console.log(data.mensagem); // Exibe a resposta no console
+                    }
+                    else if (data.validar === false) {
+                        modalMessage.textContent = 'Não é um membro'; // Atualiza o texto
+                        modalContent.className = 'modal-content red-modal'; // Fundo vermelho                      
+                        console.log(data.mensagem); // Exibe a resposta no console
+                    }
+
+                    // Agora, exibe o modal
+                    modal.style.display = "block";
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar CPF:', error);
+                    alert('Ocorreu um erro. Tente novamente mais tarde.');
+                });
+        }
+
+        // Fecha o modal quando clicar no botão de fechar
+        document.getElementById("closeModal").onclick = function () {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // Fecha o modal se o usuário clicar fora da caixa do modal
+        window.onclick = function (event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
